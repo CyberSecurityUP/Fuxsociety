@@ -5,8 +5,11 @@ O script é baseado no malware de Darlene mostrado em Mr Robot
 
 Dependências:
 python
+
 pycrypto
+
 sudo apt install python python-pip
+
 sudo pip install pycrypto
 
 BY: https://github.com/joekendal/fsociety
