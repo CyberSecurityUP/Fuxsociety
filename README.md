@@ -12,4 +12,4 @@ sudo apt install python python-pip
 
 sudo pip install pycrypto
 
-BY: https://github.com/joekendal/fsociety
+
