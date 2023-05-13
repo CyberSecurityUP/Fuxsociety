@@ -1,15 +1,11 @@
-AVISO: na verdade, não executa isso. Você não poderá recuperar os arquivos.
+WARNING: does not actually perform this. You will not be able to recover the files.
 
-Isto destina-se a criptografar cada bit de dados em um sistema de arquivos unix usando AES de 256 bits com uma chave autodestrutiva gerada aleatoriamente.
-O script é baseado no malware da Darlene mostrado em Mr Robot
+This is intended to encrypt every bit of data on a unix filesystem using 256-bit AES with a randomly generated self-destructing key. The script is based on Darlene's malware shown in Mr Robot
 
-Dependências:
-python
+Dependencies: python
 
 pycrypto
 
 sudo apt install python python-pip
 
 sudo pip install pycrypto
-
-
