@@ -4,7 +4,7 @@ This is intended to encrypt every bit of data on a unix filesystem using 256-bit
 
 Dependencies: python
 
-pycrypto
+sudo pip3 install pycryptodome
 
 sudo apt install python python-pip
 
